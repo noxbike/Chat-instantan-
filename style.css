@@ -1,0 +1,146 @@
+body {
+    background-image: url('https://images-platform.99static.com//AEYtywFVHYzbDtUAL_rMtk71Kxg=/1043x1024:1927x1908/fit-in/500x500/99designs-contests-attachments/125/125789/attachment_125789092') ;
+    display: flex; 
+    justify-content: space-between;
+    margin: 0;
+    padding-bottom: 3rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+#statut { 
+    width: 10px; 
+    height: 10px; 
+    border-radius: 20px; 
+    margin:20px; 
+    background: green; 
+    box-shadow: 0px 0px 7px 1px green;
+}
+
+#form { 
+    background: #3D3B3C; 
+    padding: 0.25rem; 
+    position: fixed; 
+    bottom: 0; 
+    right: 0; 
+    width:80%; 
+    display: flex; 
+    height: 3rem; 
+    box-sizing: border-box; 
+    backdrop-filter: blur(10px);
+}
+    
+#input { 
+    border: none; 
+    padding: 0 1rem; 
+    flex-grow: 1; 
+    border-radius: 2rem; 
+    margin: 0.25rem; 
+}
+      
+#input:focus { 
+    outline: none;
+}
+      
+#form > button { 
+    background: #888DA7; 
+    border: none; 
+    padding: 0 1rem; 
+    margin: 0.25rem; 
+    border-radius: 3px; 
+    outline: none; 
+    color: #fff; 
+}
+      
+#sidebar {
+    width: 20%; 
+    background-color: #323031; 
+    color:white; position:fixed; 
+    height: 100vh;
+}
+      
+#allUser li {
+    display:flex; 
+    flex-direction:row; 
+    justify-content: space-between; 
+    align-items: center;
+}
+      
+#allUser img {
+    margin: 0px 10px 0px 0px;
+}
+      
+#room {
+    margin-left: auto; 
+    width: 80%;
+}
+      
+#destName { 
+    display:flex; 
+    justify-content: center; 
+    align-items: center; 
+    width:80%; 
+    background-color: #3D3B3C; 
+    position:fixed; 
+    right:0; 
+    color:white; 
+    text-align: center; 
+    margin:0; 
+    font-weight: bold; 
+    font-size:smaller;
+}
+      
+#messages { 
+    list-style-type: none; 
+    margin:70px 0px 0px 0px; 
+    padding: 0; 
+    width: 100%;
+}
+      
+#messages li #text { 
+    padding: 0.5rem 1rem; 
+    margin:10px; 
+    color: white; 
+    background-color: #444d5f; 
+    border-radius: 0px 15px 15px 15px; 
+    display: inline-block; 
+}
+      
+#messages #mymessage #text { 
+    display: inline-block; 
+    align-items: right; padding: 0.5rem 1rem; 
+    color: white; background-color: #57815b; 
+    border-radius: 15px 0px 15px 15px; 
+}
+      
+#messages #mymessage  {
+    display:flex; 
+    flex-direction: row-reverse;
+}
+      
+#messages p { 
+    margin: 0px; 
+}
+      
+#messages li {
+    display: flex;
+}
+      
+#allUser {
+    list-style: none;
+}
+#time {
+    color:rgb(180, 180, 180); 
+    margin: 0; 
+    padding: 0 ; 
+    text-align: right;
+    font-size: small;
+}
+      
+#typing { 
+    color:white; 
+    background-color:rgba(128, 128, 128, 0.884); 
+    position: fixed; 
+    bottom: 0; 
+    margin-bottom: 3rem; 
+    padding: 0px 10px 0px 10px; 
+}
