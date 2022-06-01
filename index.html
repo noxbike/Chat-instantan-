@@ -1,16 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="eng">
   <head>
-    <meta charset="utf-8"/>
+    <meta charset="UTF-8"/>
     <title>Socket.IO chat</title>
     <style>
       body {
+          margin: 0px;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      }
+
+      #msgbox{
           background-image: url('https://images-platform.99static.com//AEYtywFVHYzbDtUAL_rMtk71Kxg=/1043x1024:1927x1908/fit-in/500x500/99designs-contests-attachments/125/125789/attachment_125789092') ;
           display: flex; 
           justify-content: space-between;
           margin: 0;
           padding-bottom: 3rem;
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+          display: none;
+          min-height: 75vh;
       }
 
       #statut { 
@@ -62,6 +68,7 @@
           background-color: #323031; 
           color:white; position:fixed; 
           height: 100vh;
+          top: 0;
       }
             
       #allUser li {
@@ -87,7 +94,7 @@
           width:80%; 
           background-color: #3D3B3C; 
           position:fixed; 
-          right:0; 
+          top:0; 
           color:white; 
           text-align: center; 
           margin:0; 
@@ -97,7 +104,7 @@
             
       #messages { 
           list-style-type: none; 
-          margin:70px 0px 0px 0px; 
+          margin:50px 0px 0px 0px; 
           padding: 0; 
           width: 100%;
       }
@@ -128,6 +135,8 @@
       }
             
       #messages li {
+          padding-right: 10px;
+          padding-left: 10px;
           display: flex;
       }
             
@@ -141,7 +150,20 @@
           text-align: right;
           font-size: small;
       }
-            
+      
+      #senderName {
+        font-weight: bold;
+        font-size: x-large;
+        border-radius: 50%;
+        height:40px;
+        width: 40px;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        margin: 5px;
+      }
       #typing { 
           color:white; 
           background-color:rgba(128, 128, 128, 0.884); 
@@ -153,24 +175,35 @@
     </style>
   </head>
   <body>
-    <nav id="sidebar">
-      <ul id="allUser">
-      </ul>
-    </nav>
-    <div id="room">
-      <div id="destName">
-        <p id="user">PUBLIC ROOM</p>
-        <div id="statut"></div>
-      </div>
-      <ul id="messages"></ul>
-      <p id="typing"></p>
-      <form id="form" action="">
-        <input id="input" autocomplete="off" /><button>Send</button>
+    <div id="namebox">
+      <form id="formname" action="">
+        <label>What's your name ?</label>
+        <input id="username"type="text">
+        <button>Submit</button>
       </form>
+    </div>
+    <div id="msgbox">
+      <p id="sauvegardeName" hidden></p>
+      <nav id="sidebar">
+        <ul id="allUser">
+        </ul>
+      </nav>
+      <div id="room">
+        <div id="destName">
+          <p id="user">PUBLIC ROOM</p>
+          <div id="statut"></div>
+        </div>
+        <ul id="messages"></ul>
+        <p id="typing"></p>
+        <form id="form" action="">
+          <input id="input" autocomplete="off" /><button>Send</button>
+        </form>
+      </div>
     </div>
   </body>
     <script src="/socket.io/socket.io.js"></script>
     <script>
+
     var socket = io();
     var allUser = document.getElementById('allUser');
     var user = document.getElementById('user');
@@ -178,82 +211,115 @@
     var messages = document.getElementById('messages');
     var form = document.getElementById('form');
     var input = document.getElementById('input');
+    var formname = document.getElementById('formname');
+    var username = document.getElementById('username')
+    var namebox = document.getElementById('namebox');
+    var msgbox = document.getElementById('msgbox');
+    var sauvegardeName = document.getElementById('sauvegardeName');
 
+    //cacher le formulaire name aprés avoir envoyer
+    formname.addEventListener('submit', function(e) {
+      e.preventDefault();
+      namebox.style.display = 'none'
+      msgbox.style.display='block'
+      sauvegardeName.textContent = username.value;
+      socket.emit('im connected', sauvegardeName.textContent);
+    })
+
+    //envoyer un message
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         if (input.value) {
-          socket.emit('chat message', [input.value, socket.id]);
+          socket.emit('chat message', [input.value, sauvegardeName.textContent]);
           input.value = '';
         }
     });
 
-    socket.on('connect', function(){
-      socket.emit('im connected', socket.id)
+    //savoir qui est connecter
+    socket.on('im connected too', function(info) {
+      newUser(info);
     })
 
-    socket.on('chat message', function(msg) {
+    //prévenir au nouveau que je suis connecter aussi
+    socket.on('im connected', function(info) {
+      if(sauvegardeName.textContent){
+      socket.emit('im connected too', sauvegardeName.textContent);
+      newUser(info);
+      }
+    })
+
+    //organiser le message et afficher
+    socket.on('chat message', function(info) {
         var item = document.createElement('li');
-        var block = document.createElement('div')
+        var block2 = document.createElement('div');
+        block2.id = 'text';
+        if(info.name != sauvegardeName.textContent){
+          var block = document.createElement('div');
+          var who = document.createElement('p');
+          who.textContent = info.name[0];
+          who.id = 'senderName';
+          who.style.backgroundColor = `#${info.color}`;
+          block.appendChild(who);
+          item.appendChild(block);
+        }
         var text = document.createElement('p');
+        text.textContent = info.msg;
         var time = document.createElement('p');
-        text.textContent = msg[0];
         time.textContent= getTime();
-        block.id = 'text';
         time.id = 'time';
-        block.appendChild(text);
-        block.appendChild(time);
-        item.appendChild(block)
-        item.id = msg[1] == socket.id ? 'mymessage' : `${msg[1]}`
+        
+        block2.appendChild(text);
+        block2.appendChild(time);
+        item.appendChild(block2);
+        item.id = info.name == sauvegardeName.textContent ? 'mymessage' : info.name
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
     });
 
+    //afficher si quelqu'un est en train d'écrire
     input.addEventListener('keydown', function(e) {
         socket.emit('is typing', `is typing...`);
     });
 
+    //cacher si personne écrit
     socket.on('is typing', function(event){
         typing.innerHTML = `<strong>${event}</strong>`;
         setTimeout(typingChange, 2000);
     })
 
-    socket.on('im connected too', function(name) {
-      newUser(name);
-    })
-
-    socket.on('im connected', function(name) {
-      socket.emit('im connected too', socket.id);
-      newUser(name);
-    })
-
+    //déconnection envoyer le socket.id au serveur
     socket.on('disconnect', function () {
-      socket.emit('disconnect', socket.id);
+      socket.emit('disconnect', sauvegardeName.textContent);
     })
 
+    //supprimer l'utilisateur qui est déconnecter
     socket.on('delete disconnected user', function(name) {
       var user = document.getElementById(name);
       user.remove();
     })
 
     function shortName (name){
-      let shortName = '';
-      for(i = 0; i < 4; i++){
-        shortName += name[i]
+      if(name.length > 4){
+        let shortName = '';
+        for(i = 0; i < 4; i++){
+          shortName += name[i]
+        }
+        return `${shortName}...`;
       }
-      return shortName;
+      return name;
     }
 
     function typingChange(action){
       typing.textContent = '';
     }
 
-    function newUser (name){
-      let Name = shortName(name);
+    function newUser (info){
+      let Name = shortName(info.name);
 
-      if(!document.getElementById(name)){
+      if(!document.getElementById(info.name)){
         var li = document.createElement('li');
-        li.id = name;
-        li.innerHTML = `<img src="https://proxymedia.woopic.com/api/v1/images/1211%2Favatars%2F0.png" alt="user" width="40px"/><p>${Name}...</p> <div id="statut"></div>` ;
+        li.id = info.name;
+        li.innerHTML = `<p id="senderName" style="background-color:#${info.color}">${Name[0]}<p/><p>${Name}</p> <div id="statut"></div>` ;
         allUser.appendChild(li);
       }
     }
