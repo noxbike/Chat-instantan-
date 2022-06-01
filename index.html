@@ -172,12 +172,62 @@
           margin-bottom: 3rem; 
           padding: 0px 10px 0px 10px; 
       }
+
+      #namebox{
+        background-color: rgb(240, 240, 240);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 99vh;
+      }
+
+      #namebox #formname{
+        box-shadow: 20px 20px 20px 5px gray;
+        background-color: white;
+        width: 30%;
+        min-height:40vh ;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+      }
+      #formname label{
+        color: white;
+        text-align: center;
+        font-size: x-large;
+        font-weight: 600;
+        padding: 10px 0px 10px 0px;
+        width: 100%;
+        background-color: #3D3B3C; 
+      }
+      #formname p{
+        font-size: x-large;
+      }
+
+      #formname input{
+        width: 90%;
+        height: 25px;
+        text-align: center;
+        font-size: large;
+        margin:15px;
+        border-radius: 20px;
+      }
+      #formname button{
+        background-color: #3D3B3C; ;
+        color:white;
+        font-size: x-large;
+        font-weight: 600;
+        border: none;
+        width: 100%;
+        padding: 10px 0px 10px 0px;
+      }
     </style>
   </head>
   <body>
     <div id="namebox">
       <form id="formname" action="">
-        <label>What's your name ?</label>
+        <label>Socket.io Chat</label>
+        <p> what's your name ?</p>
         <input id="username"type="text">
         <button>Submit</button>
       </form>
